@@ -1,16 +1,27 @@
 // src/index.ts
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import whatsappClient from './whatsappClient'; // Import the WhatsApp client
-import { Chat } from 'whatsapp-web.js';
+import { initializeClient, getQRCode, client } from './whatsappClient'; // Import updated WhatsApp client functions and client instance
 
-// Create Express app
 const app = express();
 app.use(express.json());
 
 // MongoDB connection
 mongoose.connect('mongodb+srv://andrew:TqdXscpxrl6q8nBd@cluster0.1qzsylk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
+
+// Initialize WhatsApp client
+initializeClient().catch(err => console.error('Error initializing WhatsApp client:', err));
+
+// Endpoint to request QR code
+app.get('/get-qr-code', async (req: Request, res: Response) => {
+    try {
+        const qrCode = await getQRCode();
+        return res.status(200).json({ qrCode });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get QR code' });
+    }
+});
 
 // Endpoint to send a message
 app.post('/send-message', async (req: Request, res: Response) => {
@@ -21,7 +32,11 @@ app.post('/send-message', async (req: Request, res: Response) => {
     }
 
     try {
-        const chat: Chat = await whatsappClient.getChatById(to);
+        if (!client) {
+            return res.status(500).json({ error: 'WhatsApp client not initialized' });
+        }
+
+        const chat = await client.getChatById(to);
         await chat.sendMessage(message);
         res.status(200).json({ success: 'Message sent' });
     } catch (error) {
