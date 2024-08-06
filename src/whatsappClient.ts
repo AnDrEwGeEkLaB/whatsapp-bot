@@ -11,7 +11,7 @@ const initializeClient = (): Promise<Client> => {
     });
 
     client.on('qr', (qr: string) => {
-      resolve(client); // Resolve promise once client is initialized
+      resolve(client); 
     });
 
 
@@ -22,12 +22,10 @@ const initializeClient = (): Promise<Client> => {
 
     client.on('auth_failure', msg => {
       console.error('Authentication failure', msg);
-      reject(new Error('Authentication failure'));
     });
 
     client.on('disconnected', reason => {
       console.log('Client disconnected', reason);
-      reject(new Error('Client disconnected'));
     });
 
     client.initialize();

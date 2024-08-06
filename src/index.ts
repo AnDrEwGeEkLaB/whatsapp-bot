@@ -19,17 +19,10 @@ wss.on('connection', ws => {
     ws.send(JSON.stringify({ from: msg.from, body: msg.body }));
   });
 
-  // Handle messages sent from the WebSocket client
-  ws.on('message', async message => {
-    const { to, body } = JSON.parse(message.toString());
-    try {
-      const chat = await client.getChatById(to);
-      await chat.sendMessage(body);
-      console.log('Message sent via WebSocket');
-    } catch (error) {
-      console.error('Failed to send message via WebSocket', error);
-    }
+  client.on('qr', (qr: string) => {
+    ws.send(JSON.stringify({ body: qr }));
   });
+
 });
 
 // Express endpoints
