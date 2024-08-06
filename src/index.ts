@@ -4,6 +4,7 @@ import WebSocket, { WebSocketServer } from 'ws';
 
 const app = express();
 app.use(express.json());
+const port = process.env.PORT || "3000";
 
 // Initialize WhatsApp client
 initializeClient().catch(err => console.error('Error initializing WhatsApp client:', err));
@@ -56,7 +57,7 @@ app.post('/send-message', async (req: Request, res: Response) => {
 });
 
 // Handle WebSocket upgrade requests
-const server = app.listen(3000, () => {
+const server = app.listen(port, () => {
   console.log('Server running on port 3000');
 });
 
