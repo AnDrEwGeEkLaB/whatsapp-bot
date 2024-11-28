@@ -1,13 +1,18 @@
+/*TS Config */
 {
   "compilerOptions": {
+    "resolveJsonModule": true,
     "target": "ES2020",
-    "module": "commonjs",
+    "module": "CommonJS",
+    "allowJs": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
+    "noImplicitAny": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "checkJs": false,
+    "moduleResolution": "node"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./dist", "./src/TDD", "jest.config.js"]
 }
